@@ -107,7 +107,11 @@ function inject(lib, process_name){
 
 function Hooker(lib, process_name) {
     const name = lib['name'];
-    Module.enumerateExportsSync(name).forEach(function(exp){
+    const entries = (parseInt(Frida.version) >= 17 && mod.enumerateSymbols) 
+      ? mod.enumerateSymbols() 
+      : Module.enumerateExportsSync(moduleName);
+  
+    entries.forEach(function(exp){
         try {
             var module_address = exp.address;
             if (exp.name === '_lcc00' || exp.name === '_oecc00') {
